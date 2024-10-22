@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dat.utils.Utils;
 import dat.security.controllers.SecurityController;
-import dat.security.enums.Role;
+import dat.enums.Role;
 import io.javalin.apibuilder.EndpointGroup;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
