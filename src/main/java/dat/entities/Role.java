@@ -19,7 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 // Serialize the class. that means that the class can be converted to a sequence of bytes
-public class Role implements Serializable {
+public class Role implements Serializable  {
 
     // A serializable class must have a serial version UID
     @Serial
@@ -30,10 +30,29 @@ public class Role implements Serializable {
     @Column(name = "id", nullable = false, unique = true)
     private int id;
 
-    @Column(name = "name", length = 20)
+    @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "password", length = 40)
-    private String password;
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "roles" )
+    private Set<User> users = new HashSet<>();
+
+    public Role() {}
+
+    public Role(String roleName) {
+        this.name = roleName;
+    }
+
+    public String getRoleName() {
+        return name;
+    }
+
+
+//    public Set<User> getUsers() {
+//        return getUsers();
+//    }
+
+
+
 
 }

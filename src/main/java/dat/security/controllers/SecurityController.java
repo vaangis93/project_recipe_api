@@ -3,6 +3,7 @@ package dat.security.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nimbusds.jose.JOSEException;
+import dat.entities.User;
 import dat.utils.Utils;
 import dat.config.HibernateConfig;
 import dat.security.daos.ISecurityDAO;
@@ -27,10 +28,7 @@ import java.text.ParseException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Purpose: To handle security in the API
- * Author: Thomas Hartmann
- */
+
 public class SecurityController implements ISecurityController {
     ObjectMapper objectMapper = new ObjectMapper();
     ITokenSecurity tokenSecurity = new TokenSecurity();
@@ -44,7 +42,7 @@ public class SecurityController implements ISecurityController {
         if (instance == null) {
             instance = new SecurityController();
         }
-        securityDAO = new SecurityDAO(HibernateConfig.getEntityManagerFactory("hotels"));
+        securityDAO = new SecurityDAO(HibernateConfig.getEntityManagerFactory("recipes"));
         return instance;
     }
 
@@ -77,10 +75,10 @@ public class SecurityController implements ISecurityController {
                 UserDTO userInput = ctx.bodyAsClass(UserDTO.class);
                 User created = securityDAO.createUser(userInput.getUsername(), userInput.getPassword());
 
-                String token = createToken(new UserDTO(created.getUsername(), Set.of("USER")));
+                String token = createToken(new UserDTO(created.getUserName(), Set.of("USER")));
                 ctx.status(HttpStatus.CREATED).json(returnObject
                         .put("token", token)
-                        .put("username", created.getUsername()));
+                        .put("username", created.getUserName()));
             } catch (EntityExistsException e) {
                 ctx.status(HttpStatus.UNPROCESSABLE_CONTENT);
                 ctx.json(returnObject.put("msg", "User already exists"));

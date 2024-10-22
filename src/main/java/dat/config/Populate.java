@@ -2,9 +2,11 @@ package dat.config;
 
 
 import dat.entities.Recipes;
+import dat.entities.Role;
 import dat.entities.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.mapping.Collection;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -16,36 +18,55 @@ public class Populate {
 
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("recipes");
 
-
+        // setting the recipe-collection-Set method to a variable for emil and janus
         Set<Recipes> recipesSetForEmil = getRecipes1();
         Set<Recipes> recipesSetForJanus = getRecipes2();
 
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        User Emil = new User("user1", "user1");
-        User Janus = new User("user1", "user1");
-        Emil.setRecipes(recipesSetForEmil);
-        Janus.setRecipes(recipesSetForJanus);
-        em.persist(Emil);
-        em.persist(Janus);
-        em.getTransaction().commit();
+        try (EntityManager em = emf.createEntityManager()) {
+            em.getTransaction().begin();
 
+            Recipes recipes1 = new Recipes("Browned Butter Caramel", "100 g cream. 100 g chocolate. 100 g browned butter. 80 g sugar", "Boil pasta in water", "Easy");
+            //creating users
+            User emil = new User("emil", "user1");
+            User janus = new User("janus", "user1");
+            //creating roles
+            Role regularRole = new Role("regular");
+            Role adminRole = new Role("admin");
+            // adding the roles to the users
+            emil.addRole(adminRole);
+            janus.addRole(regularRole);
+
+            // Add all recipes(Set/collections) for the users and setting the user in the recipes
+            janus.getRecipes().addAll(recipesSetForJanus); // Add all recipes to janus's set of recipes
+            recipesSetForJanus.forEach(recipes -> recipes.setUser(janus)); // Set the user in the recipe to janus. for the entire Set/collections
+            emil.getRecipes().addAll(recipesSetForEmil);
+            recipesSetForEmil.forEach(recipes -> recipes.setUser(emil));
+
+            // adding a single recipe to emil and setting the user in the recipe to emil
+            emil.getRecipes().add(recipes1); // Add recipe to emil's set of recipes
+            recipes1.setUser(emil); // Set the user in the recipe to emil.
+            // no need for persisting the recipe, because it is already getting persisted when persisting user. because of the cascade type(PERSIST).
+
+            // persist the users
+            em.persist(emil);
+            em.persist(janus);
+            em.getTransaction().commit();
+
+            // print the users to the console
+            System.out.println(janus);
+            System.out.println(emil);
+        }
 
     }
 
 
+    @NotNull
     private static Set<Recipes> getRecipes1() {
 
-//        User user1 = new User("user1", "user1");
-//        User user2 = new User("user1", "user1");
-//        User user3 = new User("user1", "user1");
-//        User user4 = new User("user1", "user1");
-//        User user5 = new User("user1", "user1");
-//        User user6 = new User("user1", "user1");
+        Recipes recipes1 = new Recipes("Browned Butter Caramel", "100 g cream. 100 g chocolate. 100 g browned butter. 80 g sugar", "Boil pasta in water", "Easy");
+        Recipes recipes2 = new Recipes("Lemon Tart", "200 g flour. 100 g butter. 150 g sugar. 3 eggs. 2 lemons", "Make the tart crust with flour and butter, mix the filling with eggs, lemon juice, and sugar, bake until set.", "Medium");
+        Recipes recipes3 = new Recipes("Chocolate Mousse", "150 g dark chocolate. 3 eggs. 50 g sugar. 200 ml cream", "Melt chocolate, fold in whipped cream, and beaten egg whites, chill until set.", "Hard");
 
-        Recipes recipes1 = new Recipes(1, "Browned Butter Caramel", "100 g cream. 100 g chocolate. 100 g browned butter. 80 g sugar", "Boil pasta in water", "Easy");
-        Recipes recipes2 = new Recipes(2, "Pizza", "Pizza, 200g", "Bake pizza in oven", "Medium");
-        Recipes recipes3 = new Recipes(3, "Burger", "Burger, 200g", "Fry burger in pan", "Hard");
 
         Set<Recipes> recipesSet = new HashSet<>();
 
@@ -57,10 +78,11 @@ public class Populate {
         return recipesSet;
     }
 
+    @NotNull
     private static Set<Recipes> getRecipes2() {
-        Recipes recipes4 = new Recipes(4, "Salad", "Salad, 200g", "Mix salad in bowl", "Easy");
-        Recipes recipes5 = new Recipes(5, "Soup", "Soup, 200g", "Boil soup in pot", "Medium");
-        Recipes recipes6 = new Recipes(6, "Cake", "Cake, 200g", "Bake cake in oven", "Hard");
+        Recipes recipes4 = new Recipes("Vanilla Panna Cotta", "400 ml cream. 50 g sugar. 1 vanilla bean. 3 gelatine sheets", "Heat cream with vanilla and sugar, dissolve gelatine, pour into molds and chill until set.", "Easy");
+        Recipes recipes5 = new Recipes("Raspberry Cheesecake", "200 g cream cheese. 100 g sugar. 150 g raspberries. 150 g digestive biscuits. 50 g butter", "Crush biscuits and mix with melted butter for the base, blend cream cheese with sugar and fold in raspberries, pour over the base and chill.", "Medium");
+        Recipes recipes6 = new Recipes("Tiramisu", "300 g mascarpone. 150 ml espresso. 100 g sugar. 200 g ladyfingers. 3 eggs. Cocoa powder", "Whisk egg yolks with sugar and fold in mascarpone, dip ladyfingers in espresso, layer them with the mascarpone mixture, and dust with cocoa.", "Hard");
 
         Set<Recipes> recipesSet = new HashSet<>();
 
@@ -73,46 +95,6 @@ public class Populate {
 }
 
 
-//        Set<Room> calRooms = getCalRooms();
-//        Set<Room> hilRooms = getHilRooms();
-//
-//        try (var em = emf.createEntityManager()) {
-//            em.getTransaction().begin();
-//            Hotel california = new Hotel("Hotel California", "California", Hotel.HotelType.LUXURY);
-//            Hotel hilton = new Hotel("Hilton", "Copenhagen", Hotel.HotelType.STANDARD);
-//            california.setRooms(calRooms);
-//            hilton.setRooms(hilRooms);
-//            em.persist(california);
-//            em.persist(hilton);
-//            em.getTransaction().commit();
-//        }
-//    }
-//
-//    @NotNull
-//    private static Set<Room> getCalRooms() {
-//        Room r100 = new Room(100, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r101 = new Room(101, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r102 = new Room(102, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r103 = new Room(103, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r104 = new Room(104, new BigDecimal(3200), Room.RoomType.DOUBLE);
-//        Room r105 = new Room(105, new BigDecimal(4500), Room.RoomType.SUITE);
-//
-//        Room[] roomArray = {r100, r101, r102, r103, r104, r105};
-//        return Set.of(roomArray);
-//    }
-//
-//    @NotNull
-//    private static Set<Room> getHilRooms() {
-//        Room r111 = new Room(111, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r112 = new Room(112, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r113 = new Room(113, new BigDecimal(2520), Room.RoomType.SINGLE);
-//        Room r114 = new Room(114, new BigDecimal(2520), Room.RoomType.DOUBLE);
-//        Room r115 = new Room(115, new BigDecimal(3200), Room.RoomType.DOUBLE);
-//        Room r116 = new Room(116, new BigDecimal(4500), Room.RoomType.SUITE);
-//
-//        Room[] roomArray = {r111, r112, r113, r114, r115, r116};
-//        return Set.of(roomArray);
-//    }
 
 
 

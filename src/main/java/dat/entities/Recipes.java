@@ -22,7 +22,6 @@ public class Recipes {
     @Column(name = "id", nullable = false, unique = true)
     private int id;
 
-
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -32,18 +31,24 @@ public class Recipes {
     @Column(name = "description")
     private String description;
 
-    @Column (name = "diffulculty")
-    private String diffulculty;
+    @Column (name = "difficulty")
+    private String difficulty;
 
-    @Column (name = "created_by")
+    // TODO MAKE THE RIGHT ANNOTATION!!
+//    @ManyToOne
+//    @JoinColumn (name = "created_by")
+//    private User user;
+
     @ManyToOne
+    @JoinColumn(name = "created_by")  // This is the foreign key
     private User user;
+
 
     public Recipes(String title, String ingredientsAndGrams, String description, String diffulculty, User user) {
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
         this.description = description;
-        this.diffulculty = diffulculty;
+        this.difficulty = diffulculty;
         this.user = user;
     }
 
@@ -52,6 +57,13 @@ public class Recipes {
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
         this.description = description;
-        this.diffulculty = diffulculty;
+        this.difficulty = diffulculty;
+    }
+
+    public Recipes(String title, String ingredientsAndGrams, String description, String diffulculty) {
+        this.title = title;
+        this.ingredientsAndGrams = ingredientsAndGrams;
+        this.description = description;
+        this.difficulty = diffulculty;
     }
 }// end class

@@ -8,23 +8,18 @@ import io.javalin.security.RouteRole;
 
 import java.util.Set;
 
-/**
- * Purpose: To handle security in the API at the route level
- *  Author: Jon Bertelsen
- */
 
-public class AccessController implements IAccessController {
+// to be used in the routes to check if the user is authenticated and has the necessary roles
+
+public class AccessController {
 
     SecurityController securityController = SecurityController.getInstance();
 
-    /**
-     * This method checks if the user has the necessary roles to access the route.
-     * @param ctx
-     */
+    // this method is called before the route handler to check if the user is authenticated and has the necessary roles
     public void accessHandler(Context ctx) {
 
         // If no roles are specified on the endpoint, then anyone can access the route
-        if (ctx.routeRoles().isEmpty() || ctx.routeRoles().contains(Role.ANYONE)){
+        if (ctx.routeRoles().isEmpty() || ctx.routeRoles().contains(Role.ADMIN)){
            return;
         }
 

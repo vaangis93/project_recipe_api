@@ -1,6 +1,8 @@
 package dat.security.daos;
 
 
+import dat.entities.Role;
+import dat.entities.User;
 import dat.security.exceptions.ApiException;
 import dat.security.exceptions.ValidationException;
 import dk.bugelhartmann.UserDTO;
@@ -12,10 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.stream.Collectors;
 
 
-/**
- * Purpose: To handle security in the API
- * Author: Thomas Hartmann
- */
+// to handle security in the API
 public class SecurityDAO implements ISecurityDAO {
 
     private static ISecurityDAO instance;
@@ -38,7 +37,7 @@ public class SecurityDAO implements ISecurityDAO {
             user.getRoles().size(); // force roles to be fetched from db
             if (!user.verifyPassword(password))
                 throw new ValidationException("Wrong password");
-            return new UserDTO(user.getUsername(), user.getRoles().stream().map(r -> r.getRoleName()).collect(Collectors.toSet()));
+            return new UserDTO(user.getUserName(), user.getRoles().stream().map(r -> r.getRoleName()).collect(Collectors.toSet()));
         }
     }
 

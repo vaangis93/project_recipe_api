@@ -3,6 +3,7 @@ package dat.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -26,23 +27,43 @@ public class User implements Serializable {
     @Column(name = "id", nullable = false, unique = true)
     private int id;
 
-    @Column(name = "username", length = 25)
-    private String username;
+    @Column(name = "username", length = 50)
+    private String userName;
 
-    @Column(name = "password", length = 40)
+    @Column(name = "password")
     private String password;
 
-    // fetch = FetchType.EAGER is used to load all the data from the database at once. so if we get the "father" the child will be loaded as well
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Recipes> recipes = new HashSet<>();
 
-    @ManyToMany
+    @ToString.Exclude
+    @Column (name = "role",  unique = true)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public boolean verifyPassword(String pw) {
+        return BCrypt.checkpw(pw, this.password);
     }
+
+    public User(String userName, String userPass) {
+        this.userName = userName;
+        this.password = BCrypt.hashpw(userPass, BCrypt.gensalt());
+    }
+
+    public User(String userName, Set<Role> roleEntityList) {
+        this.userName = userName;
+        this.roles = roleEntityList;
+    }
+
+    public void addRole(Role role) {
+        if (role == null) {
+            return;
+        }
+        roles.add(role);
+        role.getUsers().add(this);
+    }
+
+
 }
 
 
