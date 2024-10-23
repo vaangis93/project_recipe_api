@@ -65,7 +65,7 @@ public class Recipes implements Serializable {
         this.createdBy = user;
     }
 
-    public Recipes(int id, String title, String ingredientsAndGrams, String description, String diffulculty) {
+    public Recipes(int id, String title, String ingredientsAndGrams, String description, RecipeDifficulty difficulty) {
         this.id = id;
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
@@ -73,7 +73,7 @@ public class Recipes implements Serializable {
         this.difficulty = difficulty;
     }
 
-    public Recipes(String title, String ingredientsAndGrams, String description, String diffulculty) {
+    public Recipes(String title, String ingredientsAndGrams, String description, RecipeDifficulty difficulty) {
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
         this.description = description;
