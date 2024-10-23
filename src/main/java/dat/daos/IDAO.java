@@ -9,6 +9,5 @@ public interface IDAO<T, I> {
     T create(T t);
     T update(I i, T t);
     void delete(I i);
-    boolean validatePrimaryKey(I i);
 
 }

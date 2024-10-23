@@ -1,6 +1,7 @@
 package dat.entities;
 
 
+import dat.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.mindrot.jbcrypt.BCrypt;
@@ -9,6 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -23,7 +25,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
     private int id;
 
@@ -33,13 +35,21 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Recipes> recipes = new HashSet<>();
 
     @ToString.Exclude
-    @Column (name = "role",  unique = true)
+    @Column(name = "role", unique = true)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Role> roles = new HashSet<>();
+
+
+    public User(UserDTO userDTO) {
+        this.userName = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+        this.roles = getRolesSetAsString().stream().map(Role::new).collect(Collectors.toSet());
+        this.recipes = userDTO.getRecipes();
+    }
 
     public boolean verifyPassword(String pw) {
         return BCrypt.checkpw(pw, this.password);
@@ -61,6 +71,28 @@ public class User implements Serializable {
         }
         roles.add(role);
         role.getUsers().add(this);
+    }
+
+    public void removeRole(String userRole) {
+        roles.stream()
+                .filter(role -> role.getRoleName().equals(userRole))
+                .findFirst()
+                .ifPresent(role -> {
+                    roles.remove(role);
+                    role.getUsers().remove(this);
+                });
+    }
+
+    // making a set of roles as strings
+    public Set<String> getRolesSetAsString() {
+        if (roles.isEmpty()) {
+            return null;
+        }
+        Set<String> rolesAsStrings = new HashSet<>();
+        roles.forEach((role) -> {
+            rolesAsStrings.add(role.getRoleName());
+        });
+        return rolesAsStrings;
     }
 
 

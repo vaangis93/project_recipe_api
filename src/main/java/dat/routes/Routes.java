@@ -1,5 +1,6 @@
 package dat.routes;
 
+import dat.enums.Role;
 import dat.security.routes.SecurityRoutes;
 import io.javalin.apibuilder.EndpointGroup;
 

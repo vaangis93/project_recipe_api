@@ -1,13 +1,15 @@
 package dat.entities;
 
+import dat.dtos.RecipeDTO;
+import dat.enums.RecipeDifficulty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serial;
+import java.io.Serializable;
 
 @Getter
 @NoArgsConstructor
@@ -15,7 +17,14 @@ import java.util.Set;
 @Table(name = "recipes")
 @Setter
 @AllArgsConstructor
-public class Recipes {
+// Serialize the class. that means that the class can be converted to a sequence of bytes. so we ensure that the data is the same/correct on both end.
+
+public class Recipes implements Serializable {
+
+
+    // A serializable class must have a serial version UID
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,25 +40,29 @@ public class Recipes {
     @Column(name = "description")
     private String description;
 
-    @Column (name = "difficulty")
-    private String difficulty;
-
-    // TODO MAKE THE RIGHT ANNOTATION!!
-//    @ManyToOne
-//    @JoinColumn (name = "created_by")
-//    private User user;
+    @Enumerated (EnumType.STRING)
+    @Column(name = "difficulty")
+    private RecipeDifficulty difficulty;
 
     @ManyToOne
     @JoinColumn(name = "created_by")  // This is the foreign key
-    private User user;
+    private User createdBy;
 
+    public Recipes(RecipeDTO recipeDTO){
+        this.title = recipeDTO.getTitle();
+        this.description = recipeDTO.getDescription();
+        this.ingredientsAndGrams = recipeDTO.getIngredientsAndGrams();
+        this.difficulty = recipeDTO.getDifficulty();
+        this.createdBy = recipeDTO.getCreatedBy();
+    }
 
-    public Recipes(String title, String ingredientsAndGrams, String description, String diffulculty, User user) {
+    public Recipes(String title, String ingredientsAndGrams, String description, RecipeDifficulty difficulty, User user) {
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
         this.description = description;
-        this.difficulty = diffulculty;
-        this.user = user;
+        // .valueof checks if the string is equal to the enum value
+        this.difficulty = difficulty;
+        this.createdBy = user;
     }
 
     public Recipes(int id, String title, String ingredientsAndGrams, String description, String diffulculty) {
@@ -57,13 +70,15 @@ public class Recipes {
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
         this.description = description;
-        this.difficulty = diffulculty;
+        this.difficulty = difficulty;
     }
 
     public Recipes(String title, String ingredientsAndGrams, String description, String diffulculty) {
         this.title = title;
         this.ingredientsAndGrams = ingredientsAndGrams;
         this.description = description;
-        this.difficulty = diffulculty;
+        this.difficulty = difficulty;
     }
+
+
 }// end class

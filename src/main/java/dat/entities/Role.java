@@ -18,8 +18,8 @@ import java.util.Set;
 @ToString
 @Getter
 @Setter
-// Serialize the class. that means that the class can be converted to a sequence of bytes
-public class Role implements Serializable  {
+// Serialize the class. that means that the class can be converted to a sequence of bytes. so we ensure that the data is the same/correct on both end.
+public class Role implements Serializable {
 
     // A serializable class must have a serial version UID
     @Serial
@@ -47,10 +47,10 @@ public class Role implements Serializable  {
         return name;
     }
 
-
 //    public Set<User> getUsers() {
 //        return getUsers();
 //    }
+
 
 
 
