@@ -12,14 +12,14 @@ public class RecipeRoutes {
 
     protected EndpointGroup getRoutes() {
 
-            // TODO make sure that the routes are protected by the correct roles. for some reason it just ignorer the roles
+
         return () -> {
 
                 post("/", recipeController::create, Role.ADMIN);
-                put("/{id}", recipeController::update);
-                delete("/{id}", recipeController::delete);
-                get("/", recipeController::readAll);
-                get("/{id}", recipeController::read);
+                put("/{id}", recipeController::update, Role.ADMIN);
+                delete("/{id}", recipeController::delete, Role.ADMIN);
+                get("/", recipeController::readAll);// every1 can read all recipes
+                get("/{id}", recipeController::read); // every1 can read a recipe
 
 //       --------------- make these work. atm they dont work. --------------
 //            post("/", recipeController::create, Role.ADMIN);
