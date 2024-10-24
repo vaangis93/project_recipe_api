@@ -135,6 +135,6 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,intellij+all,java
-!/src/main/resources/config.properties
+!/src/main/resources/http/config.properties
 
 config.properties

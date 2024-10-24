@@ -5,6 +5,38 @@ GET {{url}}/recipes
 ### get a recippe by id
 GET {{url}}/recipes/8
 
+### Create a new user
+POST {{url}}/auth/register/
+
+{
+    "username": "user",
+    "password": "1234"
+}
+
+### Login with user
+POST {{url}}/auth/login/
+
+{
+    "username": "user",
+    "password": "1234"
+}
+
+> {%
+    client.global.set("jwt_token", response.body.token);
+    console.log("JWT Token:", client.global.get("jwt_token"));
+%}
+### Add admin role to user
+POST {{url}}/auth/user/addrole/
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+    "role": "admin"
+}
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+
 ### Create a new recipe
 POST {{url}}/recipes
 Authorization: Bearer {{jwt_token}}
@@ -17,41 +49,19 @@ Authorization: Bearer {{jwt_token}}
 
 }
 
-### test test
-GET localhost:7070/api/v1/recipes
-
-### Create a new user - this one will only get a USER role by default
-POST {{url}}/auth/register/
-
-{
-    "username": "user",
-    "password": "1234"
-}
-
-###
-POST {{url}}/auth/login/
-
-{
-    "username": "user",
-    "password": "1234"
-}
-
-### Add admin role to user
+### Add regular role to user
 POST {{url}}/auth/user/addrole/
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
 {
-    "role": "ADMIN"
+    "role": "regular"
 }
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
 
-> {%
-    client.global.set("jwt_token", response.body.token);
-    console.log("JWT Token:", client.global.get("jwt_token"));
-%}
+
 
 
 ###
