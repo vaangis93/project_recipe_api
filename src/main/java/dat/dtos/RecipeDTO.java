@@ -1,5 +1,6 @@
 package dat.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dat.entities.Recipes;
 import dat.entities.User;
 import dat.enums.RecipeDifficulty;
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class RecipeDTO {
 
     private String title;
+//    @JsonProperty("ingredients_and_grams")
     private String ingredientsAndGrams;
     private String description;
     private RecipeDifficulty difficulty;

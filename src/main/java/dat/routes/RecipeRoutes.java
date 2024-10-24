@@ -1,21 +1,26 @@
-//package dat.routes;
-//
-//import dat.controllers.impl.HotelController;
-//import dat.security.enums.Role;
-//import io.javalin.apibuilder.EndpointGroup;
-//
-//public class RecipeRoutes {
-//
-//    private final HotelController hotelController = new HotelController();
-//
-//    protected EndpointGroup getRoutes() {
-//
-//        return () -> {
-//            post("/", hotelController::create, Role.USER);
-//            get("/", hotelController::readAll);
-//            get("/{id}", hotelController::read);
-//            put("/{id}", hotelController::update);
-//            delete("/{id}", hotelController::delete);
-//        };
-//    }
-//}
+package dat.routes;
+
+import dat.controllers.impl.RecipeController;
+import dat.enums.Role;
+import io.javalin.apibuilder.EndpointGroup;
+
+import static io.javalin.apibuilder.ApiBuilder.*;
+
+public class RecipeRoutes {
+
+    private final RecipeController recipeController = new RecipeController();
+
+    protected EndpointGroup getRoutes() {
+
+        return () -> {
+
+                post("/", recipeController::create, Role.ADMIN);
+                put("/{id}", recipeController::update, Role.ADMIN);
+                delete("/{id}", recipeController::delete, Role.ADMIN);
+                get("/", recipeController::readAll, Role.REGULAR, Role.ADMIN);
+                get("/{id}", recipeController::read, Role.REGULAR, Role.ADMIN);
+
+        };
+
+    }
+}

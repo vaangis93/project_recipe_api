@@ -40,6 +40,10 @@ public class RecipeController implements IController {
     // TODO implement the rest of the methods
     @Override
     public void readAll(Context ctx) {
+        // getting all the recipes from the dao
+        ctx.json(dao.readAll());
+        //200 = the request has succeeded
+        ctx.status(200);
 
     }
 
@@ -60,11 +64,23 @@ public class RecipeController implements IController {
 
     @Override
     public void update(Context ctx) {
+        RecipeDTO recipeDTO = ctx.bodyAsClass(RecipeDTO.class);
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        RecipeDTO updatedDTO = dao.update(id, recipeDTO);
+
+        ctx.json(updatedDTO);
+        ctx.status(200); // 200 = OK
 
     }
 
     @Override
     public void delete(Context ctx) {
+        // request
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        // delete the recipe from id given. using our DAO
+        dao.delete(id);
+        // response
+        ctx.status(204); // 204 = No Content
 
     }
 }

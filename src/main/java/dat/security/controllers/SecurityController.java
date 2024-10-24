@@ -52,9 +52,10 @@ public class SecurityController implements ISecurityController {
             ObjectNode returnObject = objectMapper.createObjectNode(); // for sending json messages back to the client
             try {
                 UserDTO user = ctx.bodyAsClass(UserDTO.class);
-                UserDTO verifiedUser = securityDAO.getVerifiedUser(user.getUsername(), user.getPassword());
+                UserDTO verifiedUser = securityDAO.getVerifiedUser(user);
                 String token = createToken(verifiedUser);
 
+                ctx.sessionAttribute("currentUser", user);
                 ctx.status(200).json(returnObject
                         .put("token", token)
                         .put("username", verifiedUser.getUsername()));
@@ -73,12 +74,12 @@ public class SecurityController implements ISecurityController {
             ObjectNode returnObject = objectMapper.createObjectNode();
             try {
                 UserDTO userInput = ctx.bodyAsClass(UserDTO.class);
-                User created = securityDAO.createUser(userInput.getUsername(), userInput.getPassword());
+                User created = securityDAO.createUser(userInput);
 
-                String token = createToken(new UserDTO(created.getUserName(), Set.of("USER")));
+                String token = createToken(new UserDTO(created.getUsername(), Set.of("USER")));
                 ctx.status(HttpStatus.CREATED).json(returnObject
                         .put("token", token)
-                        .put("username", created.getUserName()));
+                        .put("username", created.getUsername()));
             } catch (EntityExistsException e) {
                 ctx.status(HttpStatus.UNPROCESSABLE_CONTENT);
                 ctx.json(returnObject.put("msg", "User already exists"));
@@ -178,13 +179,16 @@ public class SecurityController implements ISecurityController {
                 // get the role from the body. the json is {"role": "manager"}.
                 // We need to get the role from the body and the username from the token
                 String newRole = ctx.bodyAsClass(ObjectNode.class).get("role").asText();
-                UserDTO user = ctx.attribute("user");
-                User updatedUser = securityDAO.addRole(user, newRole);
+                UserDTO currentUser = ctx.sessionAttribute("currentUser");
+                //UserDTO user = new UserDTO(currentUser);
+                securityDAO.addRole(currentUser, newRole);
                 ctx.status(200).json(returnObject.put("msg", "Role " + newRole + " added to user"));
             } catch (EntityNotFoundException e) {
                 ctx.status(404).json(returnObject.put("msg", "User not found"));
             }
         };
     }
+
+
 
 }

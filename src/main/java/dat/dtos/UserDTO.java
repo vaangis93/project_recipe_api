@@ -20,13 +20,15 @@ import java.util.stream.Collectors;
 @ToString
 public class UserDTO {
 
+    // id testing
+
     private String username;
     private String password;
     Set<Recipes> recipes = new HashSet();
     Set<String> roles = new HashSet();
 
     public UserDTO(User user) {
-        this.username = user.getUserName();
+        this.username = user.getUsername();
         this.password = user.getPassword();
         this.roles = user.getRoles().stream().map(role -> role.getRoleName()).collect(Collectors.toSet());
         this.recipes = user.getRecipes();

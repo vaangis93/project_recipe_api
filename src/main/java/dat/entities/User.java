@@ -30,7 +30,7 @@ public class User implements Serializable {
     private int id;
 
     @Column(name = "username", length = 50)
-    private String userName;
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -45,7 +45,7 @@ public class User implements Serializable {
 
 
     public User(UserDTO userDTO) {
-        this.userName = userDTO.getUsername();
+        this.username = userDTO.getUsername();
         this.password = userDTO.getPassword();
         this.roles = getRolesSetAsString().stream().map(Role::new).collect(Collectors.toSet());
         this.recipes = userDTO.getRecipes();
@@ -56,12 +56,12 @@ public class User implements Serializable {
     }
 
     public User(String userName, String userPass) {
-        this.userName = userName;
+        this.username = userName;
         this.password = BCrypt.hashpw(userPass, BCrypt.gensalt());
     }
 
     public User(String userName, Set<Role> roleEntityList) {
-        this.userName = userName;
+        this.username = userName;
         this.roles = roleEntityList;
     }
 

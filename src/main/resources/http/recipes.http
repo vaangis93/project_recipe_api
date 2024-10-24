@@ -1,0 +1,57 @@
+### GET request to example server
+### A simple get request to the test endpoint. No need for login
+GET {{url}}/recipes
+
+### get a recippe by id
+GET {{url}}/recipes/8
+
+### Create a new recipe
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
+
+{
+    "title": "emil",
+    "ingredientsAndGrams": "100 g chokolade",
+    "description": "smelt chokolade",
+    "difficulty": "EASY"
+
+}
+
+### test test
+GET localhost:7070/api/v1/recipes
+
+### Create a new user - this one will only get a USER role by default
+POST {{url}}/auth/register/
+
+{
+    "username": "user",
+    "password": "1234"
+}
+
+###
+POST {{url}}/auth/login/
+
+{
+    "username": "user",
+    "password": "1234"
+}
+
+### Add admin role to user
+POST {{url}}/auth/user/addrole/
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+    "role": "ADMIN"
+}
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+
+> {%
+    client.global.set("jwt_token", response.body.token);
+    console.log("JWT Token:", client.global.get("jwt_token"));
+%}
+
+
+###
