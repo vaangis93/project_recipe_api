@@ -1,17 +1,16 @@
 package dat.security.daos;
 
 
-import dat.security.entities.Role;
-import dat.security.entities.User;
-import dat.security.exceptions.ApiException;
+import dat.exceptions.ApiException;
+import dat.entities.Role;
+import dat.entities.User;
 import dat.security.exceptions.ValidationException;
-import dk.bugelhartmann.UserDTO;
+import dat.dtos.UserDTO;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -46,7 +45,7 @@ public class SecurityDAO implements ISecurityDAO {
     }
 
     @Override
-    public User createUser(String username, String password) {
+    public User createUser(String username, String password) throws ApiException {
         try (EntityManager em = getEntityManager()) {
             User userEntity = em.find(User.class, username);
             if (userEntity != null)

@@ -1,5 +1,7 @@
-package dat.security.entities;
+package dat.entities;
 
+
+import dat.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.mindrot.jbcrypt.BCrypt;
@@ -8,45 +10,45 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-/**
- * Purpose: To handle security in the API
- * Author: Thomas Hartmann
- */
 @Entity
 @Table(name = "users")
-@NamedQueries(@NamedQuery(name = "User.deleteAllRows", query = "DELETE from User"))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class User implements Serializable, ISecurityUser {
+public class User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", nullable = false, unique = true)
+//    private int id;
+
     @Id
-    @Basic(optional = false)
-    @Column(name = "username", length = 25)
+    @Column(name = "username", length = 50)
     private String username;
-    @Basic(optional = false)
+
     @Column(name = "password")
     private String password;
 
-    @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "user_name", referencedColumnName = "username")}, inverseJoinColumns = {@JoinColumn(name = "role_name", referencedColumnName = "name")})
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Set<Recipes> recipes = new HashSet<>();
+
+    @ToString.Exclude
+    @Column(name = "role", unique = true)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Role> roles = new HashSet<>();
 
-    public Set<String> getRolesAsStrings() {
-        if (roles.isEmpty()) {
-            return null;
-        }
-        Set<String> rolesAsStrings = new HashSet<>();
-        roles.forEach((role) -> {
-            rolesAsStrings.add(role.getRoleName());
-        });
-        return rolesAsStrings;
+
+    public User(UserDTO userDTO) {
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+        this.roles = getRolesSetAsString().stream().map(Role::new).collect(Collectors.toSet());
+        this.recipes = userDTO.getRecipes();
     }
 
     public boolean verifyPassword(String pw) {
@@ -80,5 +82,20 @@ public class User implements Serializable, ISecurityUser {
                     role.getUsers().remove(this);
                 });
     }
+
+    // making a set of roles as strings
+    public Set<String> getRolesSetAsString() {
+        if (roles.isEmpty()) {
+            return null;
+        }
+        Set<String> rolesAsStrings = new HashSet<>();
+        roles.forEach((role) -> {
+            rolesAsStrings.add(role.getRoleName());
+        });
+        return rolesAsStrings;
+    }
+
+
 }
+
 

@@ -1,0 +1,98 @@
+### Create a new user
+POST {{url}}/auth/register/
+
+{
+    "username": "user",
+    "password": "1234"
+}
+
+### Login with user
+POST {{url}}/auth/login/
+
+{
+    "username": "user",
+    "password": "1234"
+}
+
+
+> {%
+    client.global.set("jwt_token", response.body.token);
+    console.log("JWT Token:", client.global.get("jwt_token"));
+%}
+
+### Add admin role to user
+POST {{url}}/auth/user/addrole/
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+    "role": "admin"
+}
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+
+### Create one new recipe
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
+
+{
+    "title": "chocolate truffle",
+    "ingredientsAndGrams": "100 g chocolate. 30 g butter. 25 g dobbel cream ",
+    "description": "smelt chokolade. mix. blend. ",
+    "difficulty": "EASY"
+
+}
+
+### Add regular role to user
+POST {{url}}/auth/user/addrole/
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+    "role": "regular"
+}
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+### Create one more new recipe
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
+
+{
+    "title": "Vanilla Cake",
+    "ingredientsAndGrams": "200 g sugar. 150 g butter. 250 g flour. 2 eggs. 100 ml milk. 1 tsp vanilla extract.",
+    "description": "Mix butter and sugar. Add eggs and vanilla. Stir in flour and milk. Bake at 180°C for 30 minutes.",
+    "difficulty": "MEDIUM"
+}
+
+### A simple get request to the test endpoint. No need for login
+GET {{url}}/recipes
+
+### get a recippe by id
+GET {{url}}/recipes/2
+
+### Create a new recipe
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
+
+### updating/changing a recipe
+PUT {{url}}/recipes/2
+Authorization: Bearer {{jwt_token}}
+
+{
+    "title": "Spaghetti Bolognese",
+    "ingredientsAndGrams": "200 g minced beef. 100 g spaghetti. 50 g onions. 50 g tomatoes. 1 clove garlic.",
+    "description": "Cook spaghetti. Sauté onions and garlic. Add beef and tomatoes. Simmer and serve with pasta.",
+    "difficulty": "MEDIUM"
+}
+
+
+### Delete a recipe
+DELETE {{url}}/recipes/2
+Authorization: Bearer {{jwt_token}}
+
+
+
+
+###

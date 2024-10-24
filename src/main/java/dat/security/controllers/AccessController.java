@@ -1,7 +1,7 @@
 package dat.security.controllers;
 
-import dat.security.enums.Role;
-import dk.bugelhartmann.UserDTO;
+import dat.enums.Role;
+import dat.dtos.UserDTO;
 import io.javalin.http.Context;
 import io.javalin.http.UnauthorizedResponse;
 import io.javalin.security.RouteRole;
@@ -24,7 +24,7 @@ public class AccessController implements IAccessController {
     public void accessHandler(Context ctx) {
 
         // If no roles are specified on the endpoint, then anyone can access the route
-        if (ctx.routeRoles().isEmpty() || ctx.routeRoles().contains(Role.ANYONE)){
+        if (ctx.routeRoles().isEmpty() || ctx.routeRoles().contains(Role.REGULAR)){
            return;
         }
 

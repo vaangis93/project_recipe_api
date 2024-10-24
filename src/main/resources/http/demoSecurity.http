@@ -6,7 +6,8 @@ POST {{url}}/auth/register/
 
 {
     "username": "user",
-    "password": "test123"
+    "password": "1234"
+
 }
 
 ###
@@ -14,7 +15,7 @@ POST {{url}}/auth/login/
 
 {
     "username": "user",
-    "password": "test123"
+    "password": "1234"
 }
 
 > {%
@@ -22,15 +23,6 @@ POST {{url}}/auth/login/
     console.log("JWT Token:", client.global.get("jwt_token"));
 %}
 
-###
-GET {{url}}/protected/user_demo/
-Accept: application/json
-Authorization: Bearer {{jwt_token}}
-
-###
-GET {{url}}/protected/admin_demo/
-Accept: application/json
-Authorization: Bearer {{jwt_token}}
 
 ### Add admin role to user
 POST {{url}}/auth/user/addrole/
@@ -42,6 +34,18 @@ Authorization: Bearer {{jwt_token}}
 }
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
+
+### Create a new recipe
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
+
+{
+    "title": "emil",
+    "ingredientsAndGrams": "100 g chokolade",
+    "description": "smelt chokolade",
+    "difficulty": "EASY"
+
+}
 
 ### UPDATE
 

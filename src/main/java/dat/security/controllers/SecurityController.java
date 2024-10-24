@@ -1,5 +1,7 @@
 package dat.security.controllers;
 
+import dat.exceptions.ApiException;
+import dat.security.tokenSecurity.TokenSecurity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nimbusds.jose.JOSEException;
@@ -7,13 +9,12 @@ import dat.utils.Utils;
 import dat.config.HibernateConfig;
 import dat.security.daos.ISecurityDAO;
 import dat.security.daos.SecurityDAO;
-import dat.security.entities.User;
-import dat.security.exceptions.ApiException;
+import dat.entities.User;
 import dat.security.exceptions.NotAuthorizedException;
 import dat.security.exceptions.ValidationException;
-import dk.bugelhartmann.ITokenSecurity;
-import dk.bugelhartmann.TokenSecurity;
-import dk.bugelhartmann.UserDTO;
+import dat.security.tokenSecurity.ITokenSecurity;
+import dat.dtos.UserDTO;
+import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.UnauthorizedResponse;
@@ -45,7 +46,7 @@ public class SecurityController implements ISecurityController {
         if (instance == null) {
             instance = new SecurityController();
         }
-        securityDAO = new SecurityDAO(HibernateConfig.getEntityManagerFactory("hotels"));
+        securityDAO = new SecurityDAO(HibernateConfig.getEntityManagerFactory( "recipes"));
         return instance;
     }
 
@@ -135,7 +136,7 @@ public class SecurityController implements ISecurityController {
         }
 
     @Override
-    public String createToken(UserDTO user) {
+    public String createToken(UserDTO user) throws ApiException {
         try {
             String ISSUER;
             String TOKEN_EXPIRE_TIME;
@@ -146,9 +147,9 @@ public class SecurityController implements ISecurityController {
                 TOKEN_EXPIRE_TIME = System.getenv("TOKEN_EXPIRE_TIME");
                 SECRET_KEY = System.getenv("SECRET_KEY");
             } else {
-                ISSUER = Utils.getPropertyValue("ISSUER", "config.properties");
-                TOKEN_EXPIRE_TIME = Utils.getPropertyValue("TOKEN_EXPIRE_TIME", "config.properties");
-                SECRET_KEY = Utils.getPropertyValue("SECRET_KEY", "config.properties");
+                ISSUER = Utils.getPropertyValue("ISSUER", "http/config.properties");
+                TOKEN_EXPIRE_TIME = Utils.getPropertyValue("TOKEN_EXPIRE_TIME", "http/config.properties");
+                SECRET_KEY = Utils.getPropertyValue("SECRET_KEY", "http/config.properties");
             }
             return tokenSecurity.createToken(user, ISSUER, TOKEN_EXPIRE_TIME, SECRET_KEY);
         } catch (Exception e) {
@@ -158,9 +159,9 @@ public class SecurityController implements ISecurityController {
     }
 
     @Override
-    public UserDTO verifyToken(String token) {
+    public UserDTO verifyToken(String token) throws ApiException {
         boolean IS_DEPLOYED = (System.getenv("DEPLOYED") != null);
-        String SECRET = IS_DEPLOYED ? System.getenv("SECRET_KEY") : Utils.getPropertyValue("SECRET_KEY", "config.properties");
+        String SECRET = IS_DEPLOYED ? System.getenv("SECRET_KEY") : Utils.getPropertyValue("SECRET_KEY", "http/config.properties");
 
         try {
             if (tokenSecurity.tokenIsValid(token, SECRET) && tokenSecurity.tokenNotExpired(token)) {
@@ -181,13 +182,22 @@ public class SecurityController implements ISecurityController {
                 // get the role from the body. the json is {"role": "manager"}.
                 // We need to get the role from the body and the username from the token
                 String newRole = ctx.bodyAsClass(ObjectNode.class).get("role").asText();
-                UserDTO user = ctx.attribute("user");
+                String token = getTokenFromHeader(ctx);
+                UserDTO user = verifyToken(token);
                 User updatedUser = securityDAO.addRole(user, newRole);
                 ctx.status(200).json(returnObject.put("msg", "Role " + newRole + " added to user"));
             } catch (EntityNotFoundException e) {
-                ctx.status(404).json(returnObject.put("msg", "User not found"));
+                ctx.status(404).json("{\"msg\": \"User not found\"}");
+
             }
         };
+    }
+    private String getTokenFromHeader(Context ctx) {
+        String header = ctx.header("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring("Bearer ".length()); // Extract the token
+        }
+        return null; // Return null if the token is missing or malformed
     }
 
 }
