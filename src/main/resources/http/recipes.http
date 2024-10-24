@@ -32,7 +32,7 @@ Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
 
-### Create one new recipe
+### Create a new recipe 2
 POST {{url}}/recipes
 Authorization: Bearer {{jwt_token}}
 
@@ -55,7 +55,7 @@ Authorization: Bearer {{jwt_token}}
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
-### Create one more new recipe
+### Create a new recipe 2
 POST {{url}}/recipes
 Authorization: Bearer {{jwt_token}}
 
@@ -66,18 +66,14 @@ Authorization: Bearer {{jwt_token}}
     "difficulty": "MEDIUM"
 }
 
-### A simple get request to the test endpoint. No need for login
+### get all recipes
 GET {{url}}/recipes
 
-### get a recippe by id
-GET {{url}}/recipes/2
-
-### Create a new recipe
-POST {{url}}/recipes
-Authorization: Bearer {{jwt_token}}
+### get a recipe by id
+GET {{url}}/recipes/1
 
 ### updating/changing a recipe
-PUT {{url}}/recipes/2
+PUT {{url}}/recipes/1
 Authorization: Bearer {{jwt_token}}
 
 {
@@ -89,7 +85,7 @@ Authorization: Bearer {{jwt_token}}
 
 
 ### Delete a recipe
-DELETE {{url}}/recipes/2
+DELETE {{url}}/recipes/1
 Authorization: Bearer {{jwt_token}}
 
 
