@@ -16,6 +16,7 @@ public class SecurityRoutes {
     public static EndpointGroup getSecurityRoutes() {
         return ()->{
             path("/auth", ()->{
+                get("/healthcheck", securityController::healthCheck);
                 get("/test", ctx->ctx.json(jsonMapper.createObjectNode().put("msg",  "Hello from Open")), Role.REGULAR);
                 post("/login", securityController.login(), Role.REGULAR);
                 post("/register", securityController.register(), Role.REGULAR);

@@ -200,4 +200,10 @@ public class SecurityController implements ISecurityController {
         return null; // Return null if the token is missing or malformed
     }
 
+    // Health check for the API. Used in deployment
+    public void healthCheck(@NotNull Context ctx) {
+        ctx.status(200).json("{\"msg\": \"API is up and running\"}");
+    }
+
+
 }

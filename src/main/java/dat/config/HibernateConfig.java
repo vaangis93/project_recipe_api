@@ -111,4 +111,7 @@ public class HibernateConfig {
         props.put("hibernate.hbm2ddl.auto", "create-drop"); // update for production
         return props;
     }
+
+        
+
 }
