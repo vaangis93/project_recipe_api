@@ -1,8 +1,11 @@
+### populate with data
+GET {{url}}/recipes/populate
+
 ### Create a new user
 POST {{url}}/auth/register/
 
 {
-    "username": "user",
+    "username": "emilV",
     "password": "1234"
 }
 
@@ -10,7 +13,7 @@ POST {{url}}/auth/register/
 POST {{url}}/auth/login/
 
 {
-    "username": "user",
+    "username": "emilV",
     "password": "1234"
 }
 
@@ -41,6 +44,18 @@ Authorization: Bearer {{jwt_token}}
     "ingredientsAndGrams": "100 g chocolate. 30 g butter. 25 g dobbel cream ",
     "description": "smelt chokolade. mix. blend. ",
     "difficulty": "EASY"
+
+}
+
+### Create a new recipe 3
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
+
+{
+    "title": "Flan",
+    "ingredientsAndGrams": "200 g whole milk. 30 g butter. 25 g dobbel cream, 1 pod vanilla", 160 g eg yolks, 100 g sugar",
+    "description": "boil. mix. blend. chill. Bake for 45 min at 180°C.",
+    "difficulty": "HARD"
 
 }
 

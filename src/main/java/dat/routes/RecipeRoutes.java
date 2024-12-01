@@ -18,16 +18,11 @@ public class RecipeRoutes {
                 post("/", recipeController::create, Role.ADMIN);
                 put("/{id}", recipeController::update, Role.ADMIN);
                 delete("/{id}", recipeController::delete, Role.ADMIN);
-                get("/", recipeController::readAll);// every1 can read all recipes
+                get("/", recipeController::readAll, Role.ADMIN);// every1 can read all recipes
                 get("/{id}", recipeController::read); // every1 can read a recipe
+                get("/populate", recipeController::populate);
 
-//       --------------- make these work. atm they dont work. --------------
-//            post("/", recipeController::create, Role.ADMIN);
-//            put("/{id}", recipeController::update, Role.ADMIN);
-//            delete("/{id}", recipeController::delete, Role.ADMIN);
-//            get("/", recipeController::readAll, Role.REGULAR, Role.ADMIN);
-//            get("/{id}", recipeController::read, Role.REGULAR, Role.ADMIN);
- //       -------------------------------------------------------------------
+
         };
 
 

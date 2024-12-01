@@ -10,6 +10,9 @@ POST {{url}}/auth/register/
 
 }
 
+### testing healthcheck endpoint
+GET {{url}}/auth/healthcheck/
+
 ###
 POST {{url}}/auth/login/
 

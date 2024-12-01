@@ -1,6 +1,7 @@
 package dat.controllers.impl;
 
 import dat.config.HibernateConfig;
+import dat.config.Populate;
 import dat.controllers.IController;
 import dat.daos.impl.RecipeDAO;
 import dat.dtos.RecipeDTO;
@@ -17,6 +18,8 @@ public class RecipeController implements IController {
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("recipes");
         this.dao = RecipeDAO.getInstance(emf);
     }
+
+
 
     //method to read a recipe by id. with path parameter to handle the GET request
     @Override
@@ -82,5 +85,10 @@ public class RecipeController implements IController {
         // response
         ctx.status(204); // 204 = No Content
 
+    }
+
+    public void populate(Context ctx) {
+        Populate.populate();
+        ctx.status(201); // 201 = Created
     }
 }
