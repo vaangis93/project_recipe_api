@@ -53,7 +53,7 @@ Authorization: Bearer {{jwt_token}}
 
 {
     "title": "Flan",
-    "ingredientsAndGrams": "200 g whole milk. 30 g butter. 25 g dobbel cream, 1 pod vanilla", 160 g eg yolks, 100 g sugar",
+    "ingredientsAndGrams": "200 g whole milk. 30 g butter. 25 g dobbel cream, 1 pod vanilla, 160 g eg yolks, 100 g sugar",
     "description": "boil. mix. blend. chill. Bake for 45 min at 180°C.",
     "difficulty": "HARD"
 

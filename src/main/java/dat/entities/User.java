@@ -1,6 +1,7 @@
 package dat.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dat.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,6 +37,7 @@ public class User implements Serializable {
     private String password;
 
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private Set<Recipes> recipes = new HashSet<>();
 
     @ToString.Exclude
