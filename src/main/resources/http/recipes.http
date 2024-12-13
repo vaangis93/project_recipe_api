@@ -103,7 +103,69 @@ Authorization: Bearer {{jwt_token}}
 DELETE {{url}}/recipes/1
 Authorization: Bearer {{jwt_token}}
 
+### Create alot of new recipe / dummy data
+POST {{url}}/recipes
+Authorization: Bearer {{jwt_token}}
 
 
-
-###
+    {
+        "title": "Chocolate Brownie",
+        "ingredientsAndGrams": "200 g dark chocolate. 150 g butter. 250 g sugar. 150 g flour. 3 eggs.",
+        "description": "Melt chocolate and butter. Mix with sugar, eggs, and flour. Bake at 175°C for 25 minutes.",
+        "difficulty": "EASY"
+    },
+    {
+        "title": "Pasta Carbonara",
+        "ingredientsAndGrams": "200 g spaghetti. 100 g pancetta. 2 eggs. 50 g parmesan. Salt and pepper.",
+        "description": "Cook pasta. Fry pancetta. Mix with eggs and parmesan. Combine with pasta.",
+        "difficulty": "MEDIUM"
+    },
+    {
+        "title": "Caesar Salad",
+        "ingredientsAndGrams": "1 head romaine lettuce. 50 g parmesan. 100 g croutons. Caesar dressing.",
+        "description": "Chop lettuce. Toss with parmesan, croutons, and dressing.",
+        "difficulty": "VERY_EASY"
+    },
+    {
+        "title": "Grilled Cheese Sandwich",
+        "ingredientsAndGrams": "2 slices of bread. 50 g cheddar cheese. Butter.",
+        "description": "Butter bread. Place cheese between slices. Grill until golden.",
+        "difficulty": "VERY_EASY"
+    },
+    {
+        "title": "Chicken Curry",
+        "ingredientsAndGrams": "300 g chicken. 200 g coconut milk. Curry paste. 100 g onion. Spices.",
+        "description": "Sauté onion. Add chicken and curry paste. Stir in coconut milk and simmer.",
+        "difficulty": "MEDIUM"
+    },
+    {
+        "title": "Beef Stew",
+        "ingredientsAndGrams": "500 g beef. 200 g carrots. 200 g potatoes. 100 g onions. Beef stock.",
+        "description": "Brown beef. Add vegetables and stock. Simmer for 2 hours.",
+        "difficulty": "HARD"
+    },
+    {
+        "title": "Vegetable Stir-fry",
+        "ingredientsAndGrams": "200 g broccoli. 100 g carrots. 50 g bell peppers. Soy sauce.",
+        "description": "Stir-fry vegetables. Add soy sauce and serve with rice.",
+        "difficulty": "EASY"
+    },
+    {
+        "title": "Banana Pancakes",
+        "ingredientsAndGrams": "2 bananas. 150 g flour. 2 eggs. 100 ml milk.",
+        "description": "Mash bananas. Mix with flour, eggs, and milk. Cook on a skillet.",
+        "difficulty": "VERY_EASY"
+    },
+    {
+        "title": "Apple Pie",
+        "ingredientsAndGrams": "200 g apples. 150 g sugar. 200 g flour. 100 g butter.",
+        "description": "Prepare crust with flour and butter. Fill with apples and sugar. Bake at 180°C for 40 minutes.",
+        "difficulty": "MEDIUM"
+    },
+    {
+        "title": "Margarita Pizza",
+        "ingredientsAndGrams": "1 pizza dough. 100 g tomato sauce. 100 g mozzarella. Basil leaves.",
+        "description": "Spread sauce on dough. Add mozzarella and basil. Bake at 200°C for 15 minutes.",
+        "difficulty": "EASY"
+    }
+]
